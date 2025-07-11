@@ -1,34 +1,57 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { StatusBar } from 'expo-status-bar';
-import { Text, View } from 'react-native';
+import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
+import { allRoutes } from '@/constants/Routes';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useThemeColor } from '@/hooks/useThemeColor';
+
 import '../global.css';
 
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+SplashScreen.preventAutoHideAsync();
+
 export default function RootLayout() {
-  const backgroundColor = useThemeColor({}, 'background');
   const colorScheme = useColorScheme();
+  const backgroundColor = useThemeColor({}, 'background');
+
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
   if (!loaded) {
-    // Async font loading only occurs in development.
     return null;
   }
 
   return (
     <GestureHandlerRootView style={{ backgroundColor: backgroundColor, flex: 1 }}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <View className="bg-light-background dark:bg-dark-background flex-1 justify-center items-center">
-          <Text className="mt-10 text-3xl text-light-text dark:text-dark-text"> Hola mundo</Text>
-        </View>
-
-        <StatusBar style="auto" />
+        <Stack
+          screenOptions={{
+            headerShadowVisible: false,
+            contentStyle: {
+              backgroundColor: backgroundColor,
+            },
+            headerStyle: {
+              backgroundColor: backgroundColor,
+            },
+          }}
+        >
+          <Stack.Screen name="index" options={{ title: 'Inicio' }} />
+          {allRoutes.map((route) => (
+            <Stack.Screen key={route.name} name={route.name} options={{ title: route.title }} />
+          ))}
+        </Stack>
       </ThemeProvider>
     </GestureHandlerRootView>
   );
