@@ -9,12 +9,14 @@ interface Props extends ViewProps {
   backgroundColor?: string;
   children: React.ReactNode;
   margin?: number;
+  center?: boolean;
 }
 
 const ThemedView = ({
   style,
   className,
   safe = false,
+  center = false,
   children,
   backgroundColor,
   margin = 0,
@@ -29,16 +31,16 @@ const ThemedView = ({
     <View
       style={[
         {
-          backgroundColor: bgColor,
-          flex: 1,
-          //   justifyContent: 'center',
-          //   alignItems: 'center',
           paddingTop: safe ? safeAre.top : 0,
           marginHorizontal: margin,
         },
         style,
       ]}
-      className={className}
+      className={[
+        center ? 'flex-1 justify-center items-center' : '',
+        'bg-light-background dark:bg-dark-background flex-1',
+        className,
+      ].join(' ')}
     >
       {children}
     </View>
