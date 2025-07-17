@@ -1,7 +1,7 @@
 import ThemedSwitch from '@/components/ThemedSwitch';
 import ThemedView from '@/components/ThemedView';
 import { useState } from 'react';
-import ThemedCard from './components/ThemedCard';
+import ThemedCard from '../../components/ThemedCard';
 
 const Switches = () => {
   const [state, setState] = useState({
