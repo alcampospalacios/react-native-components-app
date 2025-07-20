@@ -1,6 +1,7 @@
+import FadeInImage from '@/components/FadeInImage';
 import ThemedView from '@/components/ThemedView';
 import { useState } from 'react';
-import { ActivityIndicator, FlatList, Image, View } from 'react-native';
+import { ActivityIndicator, FlatList, View } from 'react-native';
 
 const InfiniteScrollScreen = () => {
   const [numbers, setNumbers] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -8,9 +9,7 @@ const InfiniteScrollScreen = () => {
   const loadMore = () => {
     const newArray = Array.from({ length: 10 }, (_, index) => numbers.length + (index + 1));
 
-    setTimeout(() => {
-      setNumbers([...numbers, ...newArray]);
-    }, 2000);
+    setNumbers([...numbers, ...newArray]);
   };
 
   return (
@@ -22,7 +21,7 @@ const InfiniteScrollScreen = () => {
         onEndReached={loadMore}
         onEndReachedThreshold={0.7}
         ListFooterComponent={() => (
-          <View className="flex justify-center items-center my-10">
+          <View className="flex justify-center items-center my-20">
             <ActivityIndicator />
           </View>
         )}
@@ -38,10 +37,8 @@ interface ListItemProps {
 
 const ListItem = ({ number }: ListItemProps) => {
   return (
-    <Image
-      source={{
-        uri: `https://picsum.photos/id/${number}/500/400`,
-      }}
+    <FadeInImage
+      uri={`https://picsum.photos/id/${number}/500/400`}
       style={{ height: 400, width: '100%' }}
     />
   );
