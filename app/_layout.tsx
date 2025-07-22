@@ -1,4 +1,3 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -7,16 +6,17 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
 import { allRoutes } from '@/constants/Routes';
-import { useColorScheme } from '@/hooks/useColorScheme';
+
 import { useThemeColor } from '@/hooks/useThemeColor';
 
+import { ThemeChangerProvider } from '@/components/context/ThemedContextChanger';
 import '../global.css';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  // const colorScheme = useColorScheme();
   const backgroundColor = useThemeColor({}, 'background');
 
   const [loaded] = useFonts({
@@ -35,7 +35,8 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ backgroundColor: backgroundColor, flex: 1 }}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <ThemeChangerProvider>
+        {/* <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> */}
         <Stack
           screenOptions={{
             headerShadowVisible: false,
@@ -49,10 +50,15 @@ export default function RootLayout() {
         >
           <Stack.Screen name="index" options={{ title: 'Inicio' }} />
           {allRoutes.map((route) => (
-            <Stack.Screen key={route.name} name={route.name} options={{ title: route.title }} />
+            <Stack.Screen
+              key={route.name}
+              name={route.name}
+              options={{ title: route.title, headerShown: route.name !== 'slides/index' }}
+            />
           ))}
         </Stack>
-      </ThemeProvider>
+      </ThemeChangerProvider>
+      {/* </ThemeProvider> */}
     </GestureHandlerRootView>
   );
 }

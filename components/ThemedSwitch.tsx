@@ -15,16 +15,16 @@ const ThemedSwitch = ({ text, value, className, onValueChange }: Props) => {
   const primaryColor = useThemeColor({}, 'primary');
 
   return (
-    <View className={`flex flex-row items-center justify-between`}>
+    <View className={['flex flex-row items-center justify-between', className].join(' ')}>
       {text ? <ThemedText className="text-xl">{text}</ThemedText> : <View />}
       <Switch
         value={value}
         onValueChange={onValueChange}
-        className={className}
         thumbColor={isAndroid ? primaryColor : undefined}
-        ios_backgroundColor={value ? 'green' : 'red'}
+        // ios_backgroundColor={primaryColor}
         trackColor={{
           false: 'gray',
+          true: primaryColor,
         }}
       />
     </View>
